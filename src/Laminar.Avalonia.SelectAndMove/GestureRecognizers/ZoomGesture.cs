@@ -133,6 +133,17 @@ public class ZoomGesture : GestureRecognizer
     public static Matrix GetTransform(Control control, Visual parent, Point centerInParent, double scale)
     {
         Point positionInLocal = centerInParent * parent.TransformToVisual(control)!.Value;
+        
+        if (control.RenderTransformOrigin == RelativePoint.TopLeft)
+        {
+            return ScaleAt(scale, positionInLocal.X, positionInLocal.Y);
+        }
+        else if (control.RenderTransformOrigin == RelativePoint.BottomRight)
+        {
+            return ScaleAt(scale, positionInLocal.X - control.Bounds.Width, positionInLocal.Y - control.Bounds.Height);
+        }
+
+        // RelativePoint.Center > Default in Avalonia
         return ScaleAt(scale, positionInLocal.X - control.Bounds.Width / 2, positionInLocal.Y - control.Bounds.Height / 2);
     }
 
